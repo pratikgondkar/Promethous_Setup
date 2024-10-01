@@ -1,0 +1,6 @@
+---
+# handlers file for alertmanager
+- name: restart alertmanager
+  systemd:
+    name: alertmanager
+    state: restarted

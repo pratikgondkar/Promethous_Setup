@@ -1,0 +1,54 @@
+---
+# tasks file for alertmanager
+- name: Install prerequisites
+  become: true
+  block:
+    - name: Install wget package (Debian)
+      apt:
+        name: wget
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Install wget package (Red Hat)
+      yum:
+        name: wget
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+- name: Download Alertmanager
+  get_url:
+    url: "https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager_version }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+    dest: /tmp/alertmanager.tar.gz
+
+- name: Extract Alertmanager
+  unarchive:
+    src: /tmp/alertmanager.tar.gz
+    dest: /opt
+    remote_src: yes
+    creates: /opt/alertmanager-{{ alertmanager_version }}
+
+- name: Symlink Alertmanager
+  file:
+    src: "/opt/alertmanager-{{ alertmanager_version }}/alertmanager"
+    dest: /usr/local/bin/alertmanager
+    state: link
+    force: yes
+    follow: false
+
+- name: Create alertmanager user
+  user:
+    name: alertmanager
+    system: yes
+    shell: /sbin/nologin
+
+- name: Configure systemd service
+  template:
+    src: alertmanager.service.j2
+    dest: /etc/systemd/system/alertmanager.service
+  notify: restart alertmanager
+
+- name: Start Alertmanager service
+  service:
+    name: alertmanager
+    state: started
+    enabled: yes
