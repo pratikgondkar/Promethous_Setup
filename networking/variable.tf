@@ -216,6 +216,12 @@ variable "exporter_port" {
   default = "9100"
 }
 
+variable "altermanger" {
+  type = string
+  default = "9300"
+}
+
+
 # vpc peering variables
 
 variable "requester_CIDR" {
