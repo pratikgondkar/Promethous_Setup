@@ -168,6 +168,11 @@ variable "exporter_port" {
   default = "9100"
 }
 
+variable "altermanger" {
+  type = string
+  default = "9300"
+}
+
 
 # compute variable
 
