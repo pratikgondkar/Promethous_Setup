@@ -265,6 +265,19 @@ resource "aws_security_group" "SG_02" {
     protocol    = var.protocol_01
     cidr_blocks = [var.sg_cidr_range]
   }
+
+ ingress  {
+    from_port   = var.altermanger
+    to_port     = var.altermanger
+    protocol    = var.protocol_tcp
+    cidr_blocks = [var.sg_cidr_range]
+  }
+  egress  {
+    from_port   = var.allow_port
+    to_port     = var.allow_port
+    protocol    = var.protocol_01
+    cidr_blocks = [var.sg_cidr_range]
+  }
    
 
   ingress  {
