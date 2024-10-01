@@ -43,6 +43,7 @@ module "networking" {
   exporter_port = var.exporter_port
   requester_CIDR = var.requester_CIDR
   accepter_CIDR = var.accepter_CIDR
+  altermanger = var.altermanger
   region = var.region
   vpc_peering_name = var.vpc_peering_name
 }
