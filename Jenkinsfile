@@ -1,40 +1,30 @@
 pipeline {
     agent any
-
     stages {
-        stage('code check') {
+        stage('Code Check') {
             steps {
-                git branch: 'main', url: 'https://github.com/pratikgondkar/Promethous_infra.git'
+                git branch: 'main', url: 'https://github.com/pratikgondkar/Promethous_Setup.git'
             }
         }
-        stage('initialize code') {
+        stage('Prometheus') {
             steps {
-                sh "terraform init"
+                sh "ansible-playbook -i aws_ec2.yaml test.yml"
             }
         }
-        stage('validate') {
+        stage('Node-exporter') {
             steps {
-                sh "terraform validate"
+                sh "ansible-playbook -i aws_ec2.yaml node_exporter.yml"
             }
         }
-        stage('plan') {
+        stage('Alertmanager') {
             steps {
-                sh "terraform plan"
+                sh "ansible-playbook -i aws_ec2.yaml alertmanager.yml"
             }
         }
-        stage('Apply') {
+        stage('Grafana') {
             steps {
-                sh "terraform apply -auto-approve"
+                sh "ansible-playbook -i aws_ec2.yaml grafana.yml"
             }
         }
-        stage('take user input') {
-            input{
-                message "Do you want continue"
-            }
-            steps {
-                sh "terraform destroy  -auto-approve"
-            }
-        }
-        
     }
 }
